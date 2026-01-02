@@ -1,0 +1,24 @@
+const { default: mongoose } = require("mongoose");
+
+
+const schema = mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+
+    projectID: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+
+    description: {
+        type: String,
+        required: false 
+    }
+})
+
+
+const EventModel = mongoose.model('Event', schema)
+
+module.exports = EventModel

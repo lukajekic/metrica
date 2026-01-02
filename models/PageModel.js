@@ -1,0 +1,23 @@
+const mongoose = require('mongoose')
+
+const schema = mongoose.Schema({
+    title: {
+        type: String,
+        required: true
+    },
+
+    projectID: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+
+    path: {
+        type: String,
+        required: true
+    }
+})
+
+
+const PageModel = mongoose.model('Page', schema)
+
+module.exports = PageModel
