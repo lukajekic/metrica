@@ -1,5 +1,5 @@
 const getCountryCodeISO = (req)=>{
-    const countrycode = req.headers['x-vercel-ip-country']
+    const countrycode = req.headers['x-vercel-ip-country'] || 'UN'
     return countrycode
 }
 
