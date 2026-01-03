@@ -3,6 +3,7 @@ const EventTriggerModel = require("../models/EventTriggerModel")
 const projectModel = require("../models/ProjectModel")
 const getCountryCodeISO = require("../utils/CountryCode")
 const getRefererValue = require("../utils/RefererHeader")
+const { getIO } = require("../utils/socket")
 
 
 
@@ -82,6 +83,9 @@ console.log(eventwhitelist)
 
                 const newitem = new EventTriggerModel(toInsert)
                 await newitem.save()
+                if (ProjectItem.realTime && ProjectItem.realTime === true) {
+                    await sendRealTime(projectID, date, eventID)
+                }
                 return res.status(200).send(newitem)
 
             } else {
@@ -94,6 +98,9 @@ console.log(eventwhitelist)
                     incrementObject[`uniqueTriggers.${countrycode}`] =  1
                 }
                 await EventTriggerModel.findByIdAndUpdate(triggerID, {$inc: incrementObject})
+                if (ProjectItem.realTime && ProjectItem.realTime === true) {
+                    await sendRealTime(projectID, date, eventID)
+                }
                 return res.status(200).json({'message': 'OK'})
             }
         } else {
@@ -103,6 +110,27 @@ console.log(eventwhitelist)
         return res.status(500).json({'error': error.message})
     }
 }
+
+async function sendRealTime(projectID, date, path) {
+    const io = getIO()
+    io.to(projectID).emit('updatePageViewStats', {
+        "date": date,
+        "path": path
+    })
+
+            console.log('='.repeat(30))
+            console.log('New Dashboard Update')
+            console.log('-'.repeat(30))
+            console.log(`Path: ${path}`)
+            console.log(`Date: ${date}`)
+            console.log('-'.repeat(30))
+            console.log('From sendRealTime func on eventtrigger controller')
+            console.log('='.repeat(30))
+    
+
+    return
+}
+
 
 
 module.exports = {registerEventTrigger}

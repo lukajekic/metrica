@@ -27,6 +27,8 @@ const InitiateSocket = (server)=>{
             console.log('-'.repeat(30))
             console.log(`Path: ${data.path}`)
             console.log(`Date: ${data.date}`)
+            console.log('-'.repeat(30))
+            console.log('Nested in io.on(connection)')
             console.log('='.repeat(30))
         })
     })
