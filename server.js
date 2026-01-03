@@ -36,6 +36,13 @@ app.use(cors({
     credentials: true // Ovo ti treba ako šalješ cookije ili auth headere
 }));
 
+
+
+const http = require('http')
+const server = http.createServer(app)
+InitiateSocket(server)
+
+
 const UserRoutes = require('./routes/UserRoutes')
 app.use('/metrica/user', UserRoutes)
 const ProjectRoutes = require('./routes/ProjectRoutes')
@@ -53,6 +60,7 @@ app.use('/metrica/eventtrigger', EventTriggerRoutes)
 
 
 const DEVROUTES = require('./routes/DEVROUTES')
+const { InitiateSocket } = require('./utils/socket')
 app.use('/metrica/dev', DEVROUTES)
 
 

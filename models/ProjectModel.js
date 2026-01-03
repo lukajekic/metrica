@@ -33,6 +33,12 @@ const schema = new mongoose.Schema({
     icon: {
         type: String,
         required: false
+    },
+
+    realTime: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 })
 

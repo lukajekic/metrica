@@ -3,6 +3,8 @@ const PageViewModel = require("../models/PageViewModel")
 const projectModel = require("../models/ProjectModel")
 const getCountryCodeISO = require("../utils/CountryCode")
 const getRefererValue = require("../utils/RefererHeader")
+const { getIO } = require("../utils/socket")
+
 
 
 
@@ -80,7 +82,11 @@ const registerPageView = async(req,res)=>{
 
                 const newitem = new PageViewModel(toInsert)
                 await newitem.save()
-                return res.status(200).send(newitem)
+                if (ProjectItem.realTime && ProjectItem.realTime === true) {
+                    await sendRealTime(projectID, date, pathname)
+                }
+                
+                return res.status(200).json({'message': 'OK'})
 
             } else {
                 const viewID = existingPageviews[0]._id
@@ -92,6 +98,9 @@ const registerPageView = async(req,res)=>{
                     incrementObject[`uniqueViews.${countrycode}`] =  1
                 }
                 await PageViewModel.findByIdAndUpdate(viewID, {$inc: incrementObject})
+                if (ProjectItem.realTime && ProjectItem.realTime === true) {
+                    await sendRealTime(projectID, date, pathname)
+                }
                 return res.status(200).json({'message': 'OK'})
             }
         } else {
@@ -100,6 +109,18 @@ const registerPageView = async(req,res)=>{
     } catch (error) {
         return res.status(500).json({'error': error.message})
     }
+}
+
+
+
+async function sendRealTime(projectID, date, path) {
+    const io = getIO()
+    io.to(projectID).emit('updatePageViewStats', {
+        "date": date,
+        "path": path
+    })
+
+    return
 }
 
 
