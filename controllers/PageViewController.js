@@ -2,6 +2,7 @@ const PageModel = require("../models/PageModel")
 const PageViewModel = require("../models/PageViewModel")
 const projectModel = require("../models/ProjectModel")
 const getCountryCodeISO = require("../utils/CountryCode")
+const getRefererValue = require("../utils/RefererHeader")
 
 
 
@@ -28,6 +29,16 @@ const registerPageView = async(req,res)=>{
         const ProjectItem = await projectModel.findOne({apiKey: APIKey})
         if (!ProjectItem) {
             return res.status(403).json({'message': 'Invalid API Key.'})
+        }
+
+        const allowedOrigin = new URL(ProjectItem.allowedOrigin).origin
+        const RefererHeader = getRefererValue(req)
+        if (!allowedOrigin || !RefererHeader) {
+            return res.status(403).json({"message": "Forbidden, missing origin (referer) or allowed origin."})
+        }
+
+        if (allowedOrigin !== RefererHeader) {
+            return res.status(403).json({"message": "Analytics sending is not allowed from this origin.", "origin": RefererHeader})
         }
 
         const uniqueparam = req.query.unique
