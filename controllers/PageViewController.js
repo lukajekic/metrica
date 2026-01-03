@@ -120,6 +120,16 @@ async function sendRealTime(projectID, date, path) {
         "path": path
     })
 
+            console.log('='.repeat(30))
+            console.log('New Dashboard Update')
+            console.log('-'.repeat(30))
+            console.log(`Path: ${data.path}`)
+            console.log(`Date: ${data.date}`)
+            console.log('-'.repeat(30))
+            console.log('From sendRealTime func on pageview controller')
+            console.log('='.repeat(30))
+    
+
     return
 }
 
