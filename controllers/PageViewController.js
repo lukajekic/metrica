@@ -119,7 +119,7 @@ async function sendRealTime(projectID, date, path) {
     const io = getIO()
 
     console.log(`Sockets in room ${projectID}:`, io.sockets.adapter.rooms.get(projectID)?.size || 0);
-    io.to(projectID.toString()).emit('updatePageViewStats', {
+    io.to(projectID.toString()).emit('updateDashboard', {
         "date": date,
         "path": path
     })

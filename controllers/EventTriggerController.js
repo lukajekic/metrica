@@ -111,17 +111,17 @@ console.log(eventwhitelist)
     }
 }
 
-async function sendRealTime(projectID, date, path) {
+async function sendRealTime(projectID, date, eventID) {
     const io = getIO()
-    io.to(projectID).emit('updatePageViewStats', {
+    io.to(projectID.toString()).emit('updateDashboard', {
         "date": date,
-        "path": path
+        "eventID": eventID
     })
 
             console.log('='.repeat(30))
             console.log('New Dashboard Update')
             console.log('-'.repeat(30))
-            console.log(`Path: ${path}`)
+            console.log(`eventID: ${eventID}`)
             console.log(`Date: ${date}`)
             console.log('-'.repeat(30))
             console.log('From sendRealTime func on eventtrigger controller')
