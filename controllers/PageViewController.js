@@ -83,6 +83,7 @@ const registerPageView = async(req,res)=>{
                 const newitem = new PageViewModel(toInsert)
                 await newitem.save()
                 if (ProjectItem.realTime && ProjectItem.realTime === true) {
+                    console.log('Calling sendRealTime for new pageview, projectID:', projectID)
                     await sendRealTime(projectID, date, pathname)
                 }
                 
@@ -99,6 +100,7 @@ const registerPageView = async(req,res)=>{
                 }
                 await PageViewModel.findByIdAndUpdate(viewID, {$inc: incrementObject})
                 if (ProjectItem.realTime && ProjectItem.realTime === true) {
+                    console.log('Calling sendRealTime for updated pageview, projectID:', projectID)
                     await sendRealTime(projectID, date, pathname)
                 }
                 return res.status(200).json({'message': 'OK'})
@@ -115,6 +117,7 @@ const registerPageView = async(req,res)=>{
 
 async function sendRealTime(projectID, date, path) {
     const io = getIO()
+    console.log(`Sockets in room ${projectID}:`, io.sockets.adapter.rooms.get(projectID)?.size || 0);
     io.to(projectID).emit('updatePageViewStats', {
         "date": date,
         "path": path
