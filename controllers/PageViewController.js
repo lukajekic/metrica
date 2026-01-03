@@ -117,8 +117,9 @@ const registerPageView = async(req,res)=>{
 
 async function sendRealTime(projectID, date, path) {
     const io = getIO()
+
     console.log(`Sockets in room ${projectID}:`, io.sockets.adapter.rooms.get(projectID)?.size || 0);
-    io.to(projectID).emit('updatePageViewStats', {
+    io.to(projectID.toString()).emit('updatePageViewStats', {
         "date": date,
         "path": path
     })
