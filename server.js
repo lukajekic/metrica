@@ -65,6 +65,6 @@ app.use('/metrica/dev', DEVROUTES)
 
 
 connectDB().then(()=>{
-    app.listen(3000)
+    server.listen(3000)
 })
 
