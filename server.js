@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 dotenv.config()
 
+const { InitiateSocket } = require('./utils/socket')
 
 
 
@@ -60,7 +61,6 @@ app.use('/metrica/eventtrigger', EventTriggerRoutes)
 
 
 const DEVROUTES = require('./routes/DEVROUTES')
-const { InitiateSocket } = require('./utils/socket')
 app.use('/metrica/dev', DEVROUTES)
 
 
