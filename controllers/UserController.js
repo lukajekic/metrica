@@ -38,7 +38,7 @@ const hashed = await bcrypt.hash(password, salt)
 
 res.cookie('token', generateJWT(newitem._id), {
     maxAge: 86400000,
-    secure: false,
+    secure: true,
     httpOnly: true,
     sameSite: 'none'
 })
@@ -83,7 +83,7 @@ const Login = async(req, res)=>{
 
         res.cookie('token', generateJWT(user._id), {
             maxAge: 86400000,
-            secure: false,
+            secure: true,
             httpOnly: true,
             sameSite: 'none'
         })
@@ -125,7 +125,7 @@ const getProfile = async(req, res)=>{
 const Logout = async(req, res)=>{
     res.cookie('token', '', {
         expires: new Date(0),
-        secure: false,
+        secure: true,
         httpOnly: true,
         sameSite: 'none'
     })
