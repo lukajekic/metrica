@@ -40,7 +40,7 @@ res.cookie('token', generateJWT(newitem._id), {
     maxAge: 86400000,
     secure: false,
     httpOnly: true,
-    sameSite: 'none'
+    sameSite: 'lax'
 })
     return res.status(201).json(toReturn)
     
@@ -85,7 +85,7 @@ const Login = async(req, res)=>{
             maxAge: 86400000,
             secure: false,
             httpOnly: true,
-            sameSite: 'none'
+            sameSite: 'lax'
         })
 
 
@@ -127,7 +127,7 @@ const Logout = async(req, res)=>{
         expires: new Date(0),
         secure: false,
         httpOnly: true,
-        sameSite: 'none'
+        sameSite: 'lax'
     })
 
 
