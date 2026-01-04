@@ -1,0 +1,26 @@
+const WaitlistModel = require("../models/WaitListModel")
+const createLicenseKey = require("../utils/license")
+
+
+const Subscribe = async(req,res)=>{
+    try {
+        let {email} = req.body
+        email = email.trim().toLowerCase()
+        if (!email) {
+            return res.status(400).json({'message': 'Email is required.'})
+        }
+
+        const existing = await WaitlistModel.findOne({email: email})
+        if (existing) {
+            return res.status(200).json({'message': 'We already received your request. You will be contacted if your request is approved.'})
+        }
+const license = createLicenseKey()
+        const newitem = new WaitlistModel({email: email, status: 'waiting', placeholderLicense: license})
+        await newitem.save()
+        return res.status(200).json({'message': 'Thank You. You will be contacted with your License Key.'})
+    } catch (error) {
+        return res.status(500).json({'error': error.message})
+    }
+}
+
+module.exports = {Subscribe}

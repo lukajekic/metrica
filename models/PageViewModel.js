@@ -27,7 +27,7 @@ const schema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: true
     }
-})
+}, {timestamps: true})
 
 
 const PageViewModel = mongoose.model('PageView', schema, 'pageviews')

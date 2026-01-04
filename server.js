@@ -60,6 +60,9 @@ const EventTriggerRoutes = require('./routes/EventTriggerRoutes')
 app.use('/metrica/eventtrigger', EventTriggerRoutes)
 const CheckRoutes = require('./routes/CheckRoutes')
 app.use('/metrica/check', CheckRoutes)
+const WaitlistRoutes = require('./routes/WaitlistRoutes')
+app.use('/metrica/waitlist', WaitlistRoutes)
+
 
 const DEVROUTES = require('./routes/DEVROUTES')
 app.use('/metrica/dev', DEVROUTES)
