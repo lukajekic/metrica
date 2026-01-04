@@ -26,7 +26,7 @@ app.use(cors({
         // Dozvoli zahteve koji nemaju origin (npr. Postman ili lokalni fajlovi)
         if (!origin) return callback(null, true);
         
-        const allowedOrigins = [ALLOWED_GET_ORIGIN, 'http://127.0.0.1:5500', 'http://localhost:5500', 'http://localhost:5173'];
+        const allowedOrigins = [ALLOWED_GET_ORIGIN, 'http://127.0.0.1:5500', 'http://localhost:5500', 'http://localhost:5173', 'https://localhost:5173'];
         
         if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('file://')) {
             return callback(null, true);
