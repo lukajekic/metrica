@@ -58,7 +58,8 @@ const PageViewRoutes = require('./routes/PageViewRoutes')
 app.use('/metrica/pageview', PageViewRoutes)
 const EventTriggerRoutes = require('./routes/EventTriggerRoutes')
 app.use('/metrica/eventtrigger', EventTriggerRoutes)
-
+const CheckRoutes = require('./routes/CheckRoutes')
+app.use('/metrica/check', CheckRoutes)
 
 const DEVROUTES = require('./routes/DEVROUTES')
 app.use('/metrica/dev', DEVROUTES)
