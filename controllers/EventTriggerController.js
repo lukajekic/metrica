@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose")
 const EventModel = require("../models/EventModel")
 const EventTriggerModel = require("../models/EventTriggerModel")
 const projectModel = require("../models/ProjectModel")
@@ -5,7 +6,50 @@ const getCountryCodeISO = require("../utils/CountryCode")
 const getRefererValue = require("../utils/RefererHeader")
 const { getIO } = require("../utils/socket")
 
+const getEventTriggers = async(req,res)=>{
+    try {
+        let {projectID = null, startdate = null, enddate = null, eventID = null} = req.body
+        if (!projectID) {
+            return res.status(400).json({'message': 'You must provide Project ID'})
+        }
 
+        const ownership = await checkProject(projectID, req.user._id)
+        if (!ownership) {
+            return res.status(400).json({'message': 'You cannot access this project'})
+        }
+
+        
+        let query = {}
+        query.projectID = new mongoose.Types.ObjectId(projectID)
+        if (eventID) {
+            query.eventID = new mongoose.Types.ObjectId(eventID)
+        }
+
+        if (startdate || enddate) {
+            query.date = {}
+
+            if (startdate) {
+                let start = new Date(startdate)
+                start.setUTCHours(0, 0, 0, 0)
+                query.date.$gte = new Date(start)
+            }
+
+            if (enddate) {
+                let end = new Date(enddate)
+                end.setUTCHours(0, 0, 0, 0)
+                query.date.$lte = new Date(end)
+            }
+        }
+
+
+        const items = await EventTriggerModel.find(query)
+        return res.status(200).json(items)
+
+
+    } catch (error) {
+        return res.status(500).json({'message': error.message})
+    }
+}
 
 const registerEventTrigger = async(req,res)=>{
     try {
@@ -133,4 +177,4 @@ async function sendRealTime(projectID, date, eventID) {
 
 
 
-module.exports = {registerEventTrigger}
+module.exports = {registerEventTrigger, getEventTriggers}

@@ -1,12 +1,57 @@
+const { default: mongoose } = require("mongoose")
 const PageModel = require("../models/PageModel")
 const PageViewModel = require("../models/PageViewModel")
 const projectModel = require("../models/ProjectModel")
+const checkProject = require("../utils/CheckProject")
 const getCountryCodeISO = require("../utils/CountryCode")
 const getRefererValue = require("../utils/RefererHeader")
 const { getIO } = require("../utils/socket")
 
 
+const getPageViews = async(req,res)=>{
+    try {
+        let {projectID = null, startdate = null, enddate = null, path = null} = req.body
+        if (!projectID) {
+            return res.status(400).json({'message': 'You must provide Project ID'})
+        }
 
+        const ownership = await checkProject(projectID, req.user._id)
+        if (!ownership) {
+            return res.status(400).json({'message': 'You cannot access this project'})
+        }
+
+        
+        let query = {}
+        query.projectID = new mongoose.Types.ObjectId(projectID)
+        if (path && typeof path === 'string') {
+            query.path = path
+        }
+
+        if (startdate || enddate) {
+            query.date = {}
+
+            if (startdate) {
+                let start = new Date(startdate)
+                start.setUTCHours(0, 0, 0, 0)
+                query.date.$gte = new Date(start)
+            }
+
+            if (enddate) {
+                let end = new Date(enddate)
+                end.setUTCHours(0, 0, 0, 0)
+                query.date.$lte = new Date(end)
+            }
+        }
+
+
+        const items = await PageViewModel.find(query)
+        return res.status(200).json(items)
+
+
+    } catch (error) {
+        return res.status(500).json({'message': error.message})
+    }
+}
 
 const registerPageView = async(req,res)=>{
     try {
@@ -138,4 +183,4 @@ async function sendRealTime(projectID, date, path) {
 }
 
 
-module.exports = {registerPageView}
+module.exports = {registerPageView, getPageViews}

@@ -5,7 +5,14 @@ const checkProject = require("../utils/CheckProject");
 
 const getProjects = async(req,res)=>{
     try {
-        const items = await projectModel.find({owner: new mongoose.Types.ObjectId(req.user._id)}).select('-apiKey')
+        const {_id = null} = req.body
+        let query = {
+            owner: new mongoose.Types.ObjectId(req.user._id)
+        }
+        if (_id) {
+            query._id = new mongoose.Types.ObjectId(_id)
+        }
+        const items = await projectModel.find(query).select('-apiKey')
         return res.status(200).json(items)
     } catch (error) {
         return res.status(500).json({"error": error.message})

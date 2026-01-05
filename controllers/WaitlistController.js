@@ -1,5 +1,21 @@
+const usermodel = require("../models/UserModel")
 const WaitlistModel = require("../models/WaitListModel")
 const createLicenseKey = require("../utils/license")
+
+
+const GetWaitlist = async(req,res)=>{
+    try {
+        const user = await usermodel.findById(req.user._id)
+        if (user.roles.includes('admin')) {
+            const items = await WaitlistModel.find().sort({createdAt: 1})
+        return res.status(200).json(items)
+        } else {
+            return res.status(400).json({'message': "You don't have roles to access waitlist."})
+        }
+    } catch (error) {
+        return res.status(500).json({'error': error.message})
+    }
+}
 
 
 const Subscribe = async(req,res)=>{
