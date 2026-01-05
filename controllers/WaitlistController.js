@@ -39,4 +39,4 @@ const license = createLicenseKey()
     }
 }
 
-module.exports = {Subscribe}
+module.exports = {Subscribe, GetWaitlist}
