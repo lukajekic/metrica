@@ -8,7 +8,7 @@ const { getIO } = require("../utils/socket")
 
 const getEventTriggers = async(req,res)=>{
     try {
-        let {projectID = null, startdate = null, enddate = null, eventID = null} = req.body
+        let {projectID = null, startdate = null, enddate = null, eventID = null} = req.body || {}
         if (!projectID) {
             return res.status(400).json({'message': 'You must provide Project ID'})
         }

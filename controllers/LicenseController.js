@@ -6,7 +6,7 @@ const createLicenseKey = require("../utils/license")
 
 const checkValidty = async(req, res)=>{
   try {
-      const {license} = req.body
+      const {license} = req.body || {}
     const licenseITEM = await LicenseModel.findOne({licenseKey: license})
     if (!licenseITEM) {
         return res.status(400).json({"message": "License key is not valid.  "})

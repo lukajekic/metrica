@@ -5,7 +5,7 @@ const checkProject = require("../utils/CheckProject");
 
 const getProjects = async(req,res)=>{
     try {
-        const {_id = null} = req.body
+        const {_id = null} = req.body || {}
         let query = {
             owner: new mongoose.Types.ObjectId(req.user._id)
         }

@@ -4,7 +4,7 @@ const UserModel = require("../models/UserModel")
 
 const CheckExistingUser = async(req,res)=>{
     try {
-        const {email} = req.body
+        const {email} = req.body || {}
         if (!email) {
             return res.status(400).json({'message': "Provide the email."})
         }

@@ -5,7 +5,7 @@ const checkProject = require("../utils/CheckProject")
 
 const getEvents = async(req,res)=>{
 try {
-        const {projectID} = req.body
+        const {projectID} = req.body || {}
 const ownership = await checkProject(projectID, req.user._id)
 
         if (!ownership) {
