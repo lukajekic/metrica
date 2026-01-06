@@ -84,9 +84,9 @@ if (!_id) {
 
 let toUpdate = {}
 const fieldWhitelist = ['title', 'path']
-for (const key in fieldWhitelist) {
+for (const key of fieldWhitelist) {
 if (body[key] !== undefined) {
-    toUpdate[key] === body[key]
+    toUpdate[key] = body[key]
 }
 }
         const updated = await PageModel.findByIdAndUpdate(_id, toUpdate, {new: true})
