@@ -82,7 +82,7 @@ if (!_id) {
                 return res.status(400).json({"message": "Page ID and at least one other field are required."})
 }
 
-const toUpdate = {}
+let toUpdate = {}
 const fieldWhitelist = ['title', 'path']
 for (const key in fieldWhitelist) {
 if (body[key] !== undefined) {
