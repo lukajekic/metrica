@@ -4,7 +4,7 @@ const EventController = require('../controllers/EventController')
 const protect = require('../middleware/APIProtect')
 
 
-router.get('/', protect, EventController.getEvents)
+router.post('/get', protect, EventController.getEvents)
 router.get('/:id', protect, EventController.getSingleEvent)
 router.post('/', protect,  EventController.createEvent)
 router.put('/', protect, EventController.editEvent)

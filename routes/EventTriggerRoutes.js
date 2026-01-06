@@ -11,7 +11,7 @@ router.post('/track', registerEventTrigger) //ne treba api protect jer
 // nije desturktivno, sititi READ operacije sa dashboarda 
 // i izmena konfiguracije (sve osim PageView i EventTrigger)
 // api key u headeru sluzi vise kao identifikator
-router.get('/data', protect, getEventTriggers)
+router.post('/data/get', protect, getEventTriggers)
 
 
 

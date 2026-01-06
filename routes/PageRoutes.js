@@ -4,7 +4,7 @@ const PageController = require('../controllers/PageController')
 const protect = require('../middleware/APIProtect')
 
 
-router.get('/', protect, PageController.getPages)
+router.post('/get', protect, PageController.getPages)
 router.get('/:id', protect, PageController.getSinglePage)
 router.post('/', protect, PageController.createPage)
 router.put('/', protect, PageController.editPage)

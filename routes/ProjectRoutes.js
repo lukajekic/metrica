@@ -4,7 +4,7 @@ const express = require('express');
 const protect = require("../middleware/APIProtect");
 const router = express.Router()
 
-router.get('/', protect, ProjectsController.getProjects)
+router.post('/get', protect, ProjectsController.getProjects)
 router.post('/', protect, ProjectsController.createProject)
 router.put('/', protect, ProjectsController.updateProject)
 router.delete('/:id', protect, ProjectsController.deleteProject)
