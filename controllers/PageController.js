@@ -49,10 +49,13 @@ const ownership = await checkProject(page.projectID, req.user._id)
 const createPage = async(req,res)=>{
     try {
         const {title, projectID, path} = req.body
+        if (!title || !projectID || !path) {
+            return res.status(400).json({'message': "Please fill all the fields and check active project ID."})
+        }
 const ownership = await checkProject(projectID, req.user._id)
 
         if (!ownership) {
-            return res.status(403).json({"message": "You are not authorized to access this project."})
+            return res.status(400).json({"message": "You are not authorized to access this project."})
         }
 const newitem = new PageModel({title, projectID, path})
 await newitem.save()
