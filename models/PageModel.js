@@ -15,7 +15,7 @@ const schema = mongoose.Schema({
         type: String,
         required: true
     }
-})
+}, {timestamps: true})
 
 
 const PageModel = mongoose.model('Page', schema)

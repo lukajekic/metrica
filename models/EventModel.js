@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 
 const schema = mongoose.Schema({
@@ -16,7 +16,7 @@ const schema = mongoose.Schema({
         type: String,
         required: false 
     }
-})
+}, {timestamps: true})
 
 
 const EventModel = mongoose.model('Event', schema)

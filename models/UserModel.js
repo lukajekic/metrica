@@ -29,7 +29,7 @@ const schema = new mongoose.Schema({
         type: Array,
         required: true
     }
-})
+}, {timestamps: true})
 
 const model = mongoose.model('User', schema, 'users')
 module.exports = model

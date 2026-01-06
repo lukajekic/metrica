@@ -40,7 +40,7 @@ const schema = new mongoose.Schema({
         required: true,
         default: false
     }
-})
+}, {timestamps: true})
 
 
 const model = mongoose.model('Project', schema)
