@@ -1,6 +1,6 @@
 const PageModel = require("../models/PageModel")
+const PageViewModel = require("../models/PageViewModel")
 const checkProject = require("../utils/CheckProject")
-
 
 
 const getPages = async(req,res)=>{
@@ -69,7 +69,7 @@ return res.status(500).json({"error": error.message})
 
 const editPage = async(req,res)=>{
     try {
-        const body = req.body
+        const body = req.body || {}
         if (!body) {
             return res.status(400).json({"message": "Page ID and at least one other field are required."})
 
@@ -89,8 +89,26 @@ if (body[key] !== undefined) {
     toUpdate[key] = body[key]
 }
 }
-        const updated = await PageModel.findByIdAndUpdate(_id, toUpdate, {new: true})
-        return res.status(200).json(updated)
+        const updated = await PageModel.findByIdAndUpdate(_id, toUpdate, {new: false})
+        if (req.body.PATHUPDATE !== undefined && req.body.PATHUPDATE !== null) {
+            const pathupdate = req.body.PATHUPDATE
+            const newpath = req.body.path
+            const projectID = req.body.projectID
+            const oldpath = updated.path
+
+            if (!newpath || !projectID || !oldpath) {
+                return res.status(400).json({'message': 'Since you updated the path, API call needs updated path, old path and Parent Project ID.', 'Assistant_ReceivedFields': {pathupdate, newpath, oldpath, projectID}})
+            }
+
+            if (pathupdate === true) {
+                const updatemany = await PageViewModel.updateMany({path: oldpath, projectID: projectID}, {$set: {path: newpath}})
+                return res.status(200).json({"Assistant_BulkUpdateResults": updatemany, 'Assistant_Action': 'Updating Main and updating Children'})
+            } else if (pathupdate === false) {
+                const deletemany = await PageViewModel.deleteMany({path: oldpath, projectID: projectID})
+                return res.status(200).json({"Assistant_BulkUpdateResults": deletemany, 'Assistant_Action': 'Updating Main and deleting Children'})
+            }
+        }
+        return res.status(200).json({'message': 'Updated', 'OldValues': updated, 'Assistant_Action': 'Updating Main and no operation on Children'})
     } catch (error) {
         return res.status(500).json({'error': error.message})
     }
