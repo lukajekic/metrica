@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose")
 const PageModel = require("../models/PageModel")
 const PageViewModel = require("../models/PageViewModel")
 const checkProject = require("../utils/CheckProject")
@@ -118,8 +119,13 @@ if (body[key] !== undefined) {
 const deletePage = async(req, res)=>{
     try {
         const _id = req.params.id
+        const projectID = req.params.projectid
         if (!_id) {
             return res.status(400).json({"message": "You need to specify page ID."})
+        }
+
+        if (!projectID || !mongoose.Types.ObjectId.isValid(projectID)) {
+            return res.status(400).json({"message": "You need to specify project ID and in correct format."})
         }
         const page = await PageModel.findById(_id)
         if (!page) {
@@ -131,8 +137,9 @@ const deletePage = async(req, res)=>{
         }
 
 
-        await PageModel.findByIdAndDelete(_id)
-        return res.status(200).json({"message": "Successfully deleted the page."})
+        const deletedParentPage = await PageModel.findByIdAndDelete(_id)
+        const deletedchildren = await PageViewModel.deleteMany({projectID: page.projectID, path: deletedParentPage.path})
+        return res.status(200).json({"message": "Successfully deleted the page.", 'Assistant_BulkDeleteResults': deletedchildren})
     } catch (error) {
         return res.status(500).json({"error": error.message})
     }

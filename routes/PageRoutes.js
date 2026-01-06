@@ -8,6 +8,6 @@ router.post('/get', protect, PageController.getPages)
 router.get('/:id', protect, PageController.getSinglePage)
 router.post('/', protect, PageController.createPage)
 router.put('/', protect, PageController.editPage)
-router.delete('/:id', protect, PageController.deletePage)
+router.delete('/:projectid/:id', protect, PageController.deletePage)
 
 module.exports = router
