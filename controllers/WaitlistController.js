@@ -8,7 +8,12 @@ const GetWaitlist = async(req,res)=>{
     try {
         const user = await usermodel.findById(req.user._id)
         if (user.roles.includes('admin')) {
-            const items = await WaitlistModel.find().sort({createdAt: 1})
+                    const {status = null} = req.body || {}
+                    let query = {}
+                    if (status) {
+                        query.status = status
+                    }
+            const items = await WaitlistModel.find(query).sort({createdAt: 1})
         return res.status(200).json(items)
         } else {
             return res.status(400).json({'message': "You don't have roles to access waitlist."})
