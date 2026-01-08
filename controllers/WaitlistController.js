@@ -8,7 +8,7 @@ const GetWaitlist = async(req,res)=>{
     try {
         const user = await usermodel.findById(req.user._id)
         if (user.roles.includes('admin')) {
-                    const {status = null} = req.body || {}
+                    const {status = null} = req.query || {}
                     let query = {}
                     if (status) {
                         query.status = status
