@@ -1,9 +1,10 @@
 const express = require('express')
-const { Subscribe, GetWaitlist, Onboarding, getSingleInvitation } = require('../controllers/WaitlistController')
+const { Subscribe, GetWaitlist, Onboarding, getSingleInvitation, changeStatus } = require('../controllers/WaitlistController')
 const protect = require('../middleware/APIProtect')
 const router = express.Router()
 router.get('/', protect, GetWaitlist)
 router.post('/subscribe', Subscribe)
 router.post('/onboarding', Onboarding)
 router.post('/single/get', getSingleInvitation)
+router.put('/status', protect, changeStatus)
 module.exports = router

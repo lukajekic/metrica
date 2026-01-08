@@ -19,6 +19,35 @@ const GetWaitlist = async(req,res)=>{
 }
 
 
+const changeStatus = async(req, res)=>{
+    try {
+        const user = await usermodel.findById(req.user._id)
+        if (user.roles.includes('admin')) {
+            const {status = null, waitlistID = null} = req.body || {}
+            if (!status || !waitlistID) {
+                return res.status(400).json({'message': "Provide both status na dWaitlist ID"})
+            }
+
+            if (status && (status !== 'accepted' && status !== 'declined')) {
+            return res.status(400).json({'message': 'Invalid status.'})
+            }
+
+            if (status === 'accepted') {
+                await WaitlistModel.findByIdAndUpdate(waitlistID, {$set: {status: 'accepted'}})
+            } else if (status === 'declined') {
+                await WaitlistModel.findByIdAndDelete(WaitlistModel)
+            }
+
+            return res.status(200).json({'message': 'OK'})
+        } else {
+            return res.status(400).json({'message': "You don't have roles to access this API resources"})
+        }
+    } catch (error) {
+        return res.status(500).json({'error': error.message})
+    }
+}
+
+
 
 const Onboarding = async(req, res)=>{
     try {
@@ -120,4 +149,4 @@ const license = createLicenseKey()
     }
 }
 
-module.exports = {Subscribe, GetWaitlist, getSingleInvitation, Onboarding}
+module.exports = {Subscribe, GetWaitlist, getSingleInvitation, Onboarding, changeStatus}
