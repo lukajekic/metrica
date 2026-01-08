@@ -4,7 +4,7 @@ const { default: mongoose } = require("mongoose");
 const schema = new mongoose.Schema({
     owner: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: false
     },
 
     licenseKey: {
