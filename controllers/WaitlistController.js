@@ -43,7 +43,7 @@ const Onboarding = async(req, res)=>{
         if (valid) {
             
 
-            return res.status(200).json({'message': 'OK'})
+            return res.status(200).json({'message': 'OK', 'invitationID': valid._id})
         }
     } else if (action === 'finalcheck') {
         const {email = null, invitationID = null} = body
