@@ -40,7 +40,7 @@ const changeStatus = async(req, res)=>{
             if (status === 'accepted') {
                 await WaitlistModel.findByIdAndUpdate(waitlistID, {$set: {status: 'accepted'}})
             } else if (status === 'declined') {
-                await WaitlistModel.findByIdAndDelete(WaitlistModel)
+                await WaitlistModel.findByIdAndDelete(waitlistID)
             }
 
             return res.status(200).json({'message': 'OK'})
