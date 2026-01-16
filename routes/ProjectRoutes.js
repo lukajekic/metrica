@@ -8,5 +8,5 @@ const router = express.Router()
 router.post('/get', protect, ProjectsController.getProjects)
 router.post('/', protect, checkLicenseMiddleware, ProjectsController.createProject)
 router.put('/', protect, ProjectsController.updateProject)
-router.delete('/:id', protect, ProjectsController.deleteProject)
+router.delete('/', protect, ProjectsController.deleteProject)
 module.exports = router
