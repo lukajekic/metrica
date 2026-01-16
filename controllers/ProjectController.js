@@ -90,10 +90,12 @@ let result = {}
 }
 
 
+const speakeasy = require('speakeasy');
+const usermodel = require("../models/UserModel");
 
 const deleteProject = async(req,res)=>{
     try {
-        const id = req.params.id
+        const {id = null, otp = null} = req.body || {}
         if (!id) {
             return res.status(400).json({"message": "ID is required in request url parameter"})
 
@@ -105,9 +107,20 @@ const deleteProject = async(req,res)=>{
         if (!ownership) {
             return res.status(403).json({"message": "You are not authorized to access this project."})
         }
+const user = await usermodel.findById(id)
+const totpsecret = user.authenticatorSecret
 
+        const otpverificaion = speakeasy.totp.verify({
+            secret: totpsecret,
+            encoding: "ascii",
+            token: otp
+        })
 
-        await projectModel.findByIdAndDelete(id)
+        if (otpverificaion) {
+            await projectModel.findByIdAndDelete(id)
+        } else {
+            return res.status(400).json({"message": "Invalid OTP"})
+        }
 
         return res.status(200).json({"message": "Successful project deletion"})
     } catch (error) {
