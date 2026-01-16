@@ -108,7 +108,8 @@ const deleteProject = async(req,res)=>{
             return res.status(403).json({"message": "You are not authorized to access this project."})
         }
 const user = await usermodel.findById(id)
-const totpsecret = user.authenticatorSecret
+
+const totpsecret = req.user.authenticatorSecret
 
         const otpverificaion = speakeasy.totp.verify({
             secret: totpsecret,
