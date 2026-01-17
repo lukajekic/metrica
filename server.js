@@ -22,21 +22,12 @@ const cors = require('cors')
 const ALLOWED_GET_ORIGIN = process.env.FRONTEND_URL
 console.log(ALLOWED_GET_ORIGIN)
 app.use(cors({
-    origin: (origin, callback) => {
-        // Dozvoli zahteve koji nemaju origin (npr. Postman ili lokalni fajlovi)
-        if (!origin) return callback(null, true);
-        
-        const allowedOrigins = [ALLOWED_GET_ORIGIN, 'http://127.0.0.1:5500', 'http://localhost:5500', 'http://localhost:5173', 'https://localhost:5173'];
-        
-        if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('file://')) {
-            return callback(null, true);
-        } else {
-            return callback(new Error('CORS greška: Ovaj Origin nije dozvoljen.'));
-        }
-    },
-    credentials: true // Ovo ti treba ako šalješ cookije ili auth headere
-}));
+  origin: true,        
+  credentials: true
+}))
 
+
+//pronaci nacin samo sa metrice cloud da dozvoli get, a post od svuda (barem ovde, allowedorigin za post resavaju kontroleri)
 
 
 const http = require('http')
