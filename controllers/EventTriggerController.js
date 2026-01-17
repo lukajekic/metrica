@@ -21,7 +21,7 @@ const getEventTriggers = async(req,res)=>{
         
         let query = {}
         query.projectID = new mongoose.Types.ObjectId(projectID)
-        if (eventID) {
+        if (eventID && mongoose.Types.ObjectId.isValid(eventID)) {
             query.eventID = new mongoose.Types.ObjectId(eventID)
         }
 
@@ -66,7 +66,7 @@ const registerEventTrigger = async(req,res)=>{
 
         const countrycode = getCountryCodeISO(req)
         if (!countrycode) {
-            return res.status(400).json({'message': 'No header: x-vercel-ip-country'})
+            return res.status(400).json({'message': 'No header: "x-metrica-country'})
 
         }
 
@@ -85,8 +85,6 @@ const registerEventTrigger = async(req,res)=>{
                 if (allowedOrigin !== RefererHeader) {
                     return res.status(403).json({"message": "Analytics sending is not allowed from this origin.", "origin": RefererHeader})
                 }
-
-
 
         const uniqueparam = req.query.unique
         let uniquetrigger = false
@@ -130,7 +128,7 @@ console.log(eventwhitelist)
                 if (ProjectItem.realTime && ProjectItem.realTime === true) {
                     await sendRealTime(projectID, date, eventID)
                 }
-                return res.status(200).send(newitem)
+                return res.status(200).json({'message': 'OK'})
 
             } else {
                 const triggerID = existingEventTriggers[0]._id
@@ -174,7 +172,6 @@ async function sendRealTime(projectID, date, eventID) {
 
     return
 }
-
 
 
 module.exports = {registerEventTrigger, getEventTriggers}

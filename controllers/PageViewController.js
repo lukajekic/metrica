@@ -68,7 +68,7 @@ const registerPageView = async(req,res)=>{
 
         const countrycode = getCountryCodeISO(req)
         if (!countrycode) {
-            return res.status(400).json({'message': 'No header: x-vercel-ip-country'})
+            return res.status(400).json({'message': 'No header: "x-metrica-country'})
 
         }
 
@@ -157,8 +157,6 @@ const registerPageView = async(req,res)=>{
         return res.status(500).json({'error': error.message})
     }
 }
-
-
 
 async function sendRealTime(projectID, date, path) {
     const io = getIO()

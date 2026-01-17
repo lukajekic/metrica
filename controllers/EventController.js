@@ -1,5 +1,7 @@
+const { default: mongoose } = require("mongoose")
 const EventModel = require("../models/EventModel")
 const checkProject = require("../utils/CheckProject")
+const EventTriggerModel = require("../models/EventTriggerModel")
 
 
 
@@ -48,10 +50,13 @@ const ownership = await checkProject(event.projectID, req.user._id)
 const createEvent = async(req,res)=>{
     try {
         const {title, projectID, description} = req.body
+        if (!title || !projectID) {
+            return res.status(400).json({'message': "Please fill all the fields and check active project ID."})
+        }
 const ownership = await checkProject(projectID, req.user._id)
 
         if (!ownership) {
-            return res.status(403).json({"message": "You are not authorized to access this project."})
+            return res.status(400).json({"message": "You are not authorized to access this project."})
         }
 const newitem = new EventModel({title, projectID, description})
 await newitem.save()
@@ -65,7 +70,7 @@ return res.status(500).json({"error": error.message})
 
 const editEvent = async(req,res)=>{
     try {
-        const body = req.body
+        const body = req.body || {}
         if (!body) {
             return res.status(400).json({"message": "Event ID and at least one other field are required."})
 
@@ -82,7 +87,7 @@ const toUpdate = {}
 const fieldWhitelist = ['title', 'description']
 for (const key in fieldWhitelist) {
 if (body[key] !== undefined) {
-    toUpdate[key] === body[key]
+    toUpdate[key] = body[key]
 }
 }
         const updated = await EventModel.findByIdAndUpdate(_id, toUpdate, {new: true})
@@ -96,9 +101,13 @@ if (body[key] !== undefined) {
 const deleteEvent = async(req, res)=>{
     try {
         const _id = req.params.id
+        const projectID = req.params.projectid
         if (!_id) {
             return res.status(400).json({"message": "You need to specify event ID."})
         }
+        if (!projectID || !mongoose.Types.ObjectId.isValid(projectID)) {
+                    return res.status(400).json({"message": "You need to specify project ID and in correct format."})
+                }
         const event = await EventModel.findById(_id)
         if (!event) {
             return res.status(400).json({"message": "Event not found"})
@@ -109,8 +118,9 @@ const deleteEvent = async(req, res)=>{
         }
 
 
-        await EventModel.findByIdAndDelete(_id)
-        return res.status(200).json({"message": "Successfully deleted the event."})
+        const deletedParentEvent = await EventModel.findByIdAndDelete(_id)
+        const deletedchildren = await EventTriggerModel.deleteMany({projectID: event.projectID, eventID: deletedParentEvent._id})
+        return res.status(200).json({"message": "Successfully deleted the event.", 'Assistant_BulkDeleteResults': deletedchildren})
     } catch (error) {
         return res.status(500).json({"error": error.message})
     }
@@ -118,4 +128,3 @@ const deleteEvent = async(req, res)=>{
 
 
 module.exports = {getEvents, getSingleEvent, createEvent, editEvent, deleteEvent}
-        

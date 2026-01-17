@@ -147,4 +147,3 @@ const deletePage = async(req, res)=>{
 
 
 module.exports = {getPages, getSinglePage, createPage, editPage, deletePage}
-        
