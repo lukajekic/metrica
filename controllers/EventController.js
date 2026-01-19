@@ -85,7 +85,7 @@ if (!_id) {
 
 const toUpdate = {}
 const fieldWhitelist = ['title', 'description']
-for (const key in fieldWhitelist) {
+for (const key of fieldWhitelist) {
 if (body[key] !== undefined) {
     toUpdate[key] = body[key]
 }

@@ -102,6 +102,11 @@ const deleteProject = async(req,res)=>{
         }
 
 
+        if (!otp) {
+            return res.status(400).json({"message": "OTP Code is required."})
+        }
+
+
         const ownership = await checkProject(id, req.user._id)
 
         if (!ownership) {
