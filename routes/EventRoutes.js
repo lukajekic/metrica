@@ -8,6 +8,6 @@ router.post('/get', protect, EventController.getEvents)
 router.get('/:id', protect, EventController.getSingleEvent)
 router.post('/', protect,  EventController.createEvent)
 router.put('/', protect, EventController.editEvent)
-router.delete('/:id', protect, EventController.deleteEvent)
+router.delete('/:projectid/:id', protect, EventController.deleteEvent)
 
 module.exports = router
