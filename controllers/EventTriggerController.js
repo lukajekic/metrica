@@ -43,7 +43,15 @@ const getEventTriggers = async(req,res)=>{
         }
 
 
-        const items = await EventTriggerModel.find(query)
+        let items = await EventTriggerModel.find(query).populate("eventID").lean()
+
+        items = items.map((item, index)=>{
+            return {
+                ...item,
+                eventID: item.eventID._id,
+                eventData: item.eventID
+            }
+        })
         return res.status(200).json(items)
 
 
