@@ -9,7 +9,8 @@ const schema = new mongoose.Schema({
 
     eventID: {
         type: mongoose.Types.ObjectId,
-        required: true
+        required: true,
+        ref: "Event"
     },
 
     triggers: {
