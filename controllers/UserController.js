@@ -134,5 +134,46 @@ const Logout = async(req, res)=>{
     return res.status(200).json({"message": "LOGOUT SUCCESSFUL"})
 }
 
+const projectModel = require("../models/ProjectModel");
 
-module.exports = {Register, Login, getProfile, Logout}
+const deleteUser = async(req, res)=>{
+const user = req.user._id
+
+const body = req.body || {}
+const otp = req.body.otp
+if (!user || !otp) {
+    return res.status(400).json({"message": "Missing User ID and/or OTP code"})
+}
+
+const userProjects = await projectModel.find({owner: new mongoose.Types.ObjectId(user)}).countDocuments()
+if (userProjects > 0) {
+    return res.status(400).json({"message": "You need to delete all projects first."})
+}
+
+
+const totpsecret = req.user.authenticatorSecret
+
+
+const totpverify = speakeasy.totp.verify({
+    secret: totpsecret,
+    encoding: 'ascii',
+    token: otp
+})
+
+if (totpverify) {
+    await UserModel.findByIdAndDelete(user)
+      res.cookie('token', '', {
+        expires: new Date(0),
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none'
+    })
+
+    return res.status(302).redirect("/")
+} else {
+    return res.status(400).json({"message": "Invalid OTP"})
+}
+}
+
+
+module.exports = {Register, Login, getProfile, Logout, deleteUser}

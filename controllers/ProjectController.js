@@ -92,6 +92,10 @@ let result = {}
 
 const speakeasy = require('speakeasy');
 const usermodel = require("../models/UserModel");
+const PageModel = require("../models/PageModel");
+const PageViewModel = require("../models/PageViewModel");
+const EventModel = require("../models/EventModel");
+const EventTriggerModel = require("../models/EventTriggerModel");
 
 const deleteProject = async(req,res)=>{
     try {
@@ -123,6 +127,10 @@ const totpsecret = req.user.authenticatorSecret
         })
 
         if (otpverificaion) {
+            await PageModel.deleteMany({projectID: id})
+            await PageViewModel.deleteMany({projectID: id})
+            await EventModel.deleteMany({projectID: id})
+            await EventTriggerModel.deleteMany({projectID: id})
             await projectModel.findByIdAndDelete(id)
         } else {
             return res.status(400).json({"message": "Invalid OTP"})
