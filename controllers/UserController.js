@@ -134,7 +134,6 @@ const Logout = async(req, res)=>{
     return res.status(200).json({"message": "LOGOUT SUCCESSFUL"})
 }
 
-const projectModel = require("../models/ProjectModel");
 
 const deleteUser = async(req, res)=>{
 const user = req.user._id
