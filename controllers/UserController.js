@@ -175,4 +175,41 @@ if (totpverify) {
 }
 
 
-module.exports = {Register, Login, getProfile, Logout, deleteUser}
+
+
+
+
+
+
+
+const AccessDemo = async(req, res)=>{
+    try {
+       
+
+        const user = await UserModel.findOne({email: "demo@metrica.com"})
+        if (!user) {
+            return res.status(400).json({"message": "Demo account not set."})
+        }
+
+        
+       
+
+        res.cookie('token', generateJWT(user._id), {
+            maxAge: 3600000,
+            secure: true,
+            httpOnly: true,
+            sameSite: 'none'
+        })
+
+
+        return res.status(200).json({"message": "LOGIN SUCCESSFUL."})
+    } catch (error) {
+        return res.status(500).json({'error': error.message})
+    }
+}
+
+
+
+
+
+module.exports = {Register, Login, getProfile, Logout, deleteUser, AccessDemo}
